@@ -1,6 +1,6 @@
 import os
 import pathlib
-
+from api.gupy import gupy_fetch_data
 from modules.GBigquery import GBigQuery, get_bqclient
 from modules.GCStorage import GCStorage, get_gclient
 from modules.DataProcessor import DataProcessor
@@ -12,15 +12,7 @@ files_folder = working_dir.joinpath('data/files_from_script')
 processor = DataProcessor(files_folder)
 
 #fetching data
-labels = ['dados', 'UX/UI', 'administração', 'rh', 'frontend']
-
-all_jobs = []
-for l in labels:
-    jobs = all_jobs.append(processor.fetch_gupy_data(l))
-
-df = pd.concat(all_jobs, ignore_index=True)
-df = processor.treat_data(df)
-processor.save_to_parquet(df)
+gupy_fetch_data()
 
 #Upload to CloudStorage
 storage_client = get_gclient()
