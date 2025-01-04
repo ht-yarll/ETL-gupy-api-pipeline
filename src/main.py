@@ -72,3 +72,17 @@ for file in downloads_folder.iterdir():
         print(f'Upload of {file.name} was done!')
     except Exception as e:
         print(f'Error in upload:{e}')
+
+#Querying BigQuery
+query_job = """
+SELECT * 
+FROM `blackstone-446301.user_data.gupy_data`
+WHERE country = ('Brasil')
+"""
+new_table_name = 'gupy_data_brasil'
+
+if not new_table_name in bq_client.list_tables(dataset_id):
+    print(f'Creating table {table_name} on {dataset_id}...')
+    bqc.query(query_job, destination_table=f'{project_id}.{dataset_id}.{new_table_name}')   
+else:
+    print(f'Table {new_table_name} already exists on {dataset_id}')

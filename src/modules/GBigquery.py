@@ -1,4 +1,5 @@
 import os
+import pathlib
 
 from google.cloud import bigquery
 import pandas as pd
@@ -8,6 +9,8 @@ def get_bqclient():
         '/home/ht-yarll/Documents/keys/ht-churn-bstone.json'
         )
     return bigquery.Client()
+
+working_dir = pathlib.Path.cwd()
 
 class GBigQuery:
     def __init__(self, bigquery_client):
@@ -26,3 +29,25 @@ class GBigQuery:
                 )
         data.result()
         return data
+    
+    def query(self, query_string: str, destination_table: str = None):
+        try:
+            job_config = bigquery.QueryJobConfig()
+            
+            if destination_table:
+                job_config.destination = destination_table
+                job_config.write_disposition = 'WRITE_TRUNCATE'
+
+
+            query_job = self.client.query(query_string, job_config = job_config)
+            query_job.result()
+            
+            print(f'Query was done!')
+
+            if destination_table:
+                print(f'Results saved to table: {destination_table}')
+
+            return query_job
+        
+        except Exception as e:
+            print(f'Error during query: {e}')
