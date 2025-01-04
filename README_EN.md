@@ -5,10 +5,10 @@
 
 ## Roadmap
 
-- [ ]   **Fetch Data**
-- [ ]   Transform into .parquet
-- [ ]   Send to **CloudStorage**
-- [ ]   Upload to **BigQuery**
+- [X]   **Fetch Data**
+- [X]   Transform into .parquet
+- [X]   Send to **CloudStorage**
+- [X]   Upload to **BigQuery**
 - [ ]   Work with **LookerStudio** and **Figma** to **design a dashboard**
 - [ ]   Post **insights** and **final dashboard**
 
