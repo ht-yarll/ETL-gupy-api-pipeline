@@ -66,12 +66,22 @@ for file in downloads_folder.iterdir():
         print(f'Error in upload:{e}')
 
 #Querying BigQuery
-query_job = """
-SELECT * 
-FROM `blackstone-446301.user_data.gupy_data`
+excluded_columns = [
+    'description', 'careerpagelogo', 'city', 'joburl', 'badges', 'careerpageurl'
+    ]
+table_id = 'blackstone-446301.user_data.gupy_data'
+table = bq_client.get_table(table_id)
+selected_columns = [
+    field.name for field in table.schema 
+    if field.name not in excluded_columns
+    ]
+
+query_job = f"""
+SELECT {', '.join(selected_columns)}
+FROM   `blackstone-446301.user_data.gupy_data`
 WHERE country = ('Brasil')
 """
-new_table_name = 'gupy_data_brasil'
+new_table_name = 'gupy_data_analyzed'
 
 if not new_table_name in bq_client.list_tables(dataset_id):
     print(f'Creating table {table_name} on {dataset_id}...')
