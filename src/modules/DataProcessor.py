@@ -9,31 +9,16 @@ class DataProcessor:
         self.output_folder = output_path
 
     def fetch_gupy_data(self, label: str) -> pd.DataFrame:
-        base_url = f"https://portal.api.gupy.io/api/job"
-        offset = 0
-        limit = 50
-        all_data = []
+        url = f"https://portal.api.gupy.io/api/job?name={label}&offset=0&limit=400"
         
         print(f'Fetching data for {label}...')
 
         try:
-            while True:
-                url = f'{base_url}?name={label}&offset={offset}&limit={limit}'
-                r = requests.get(url)
-                response = r.json()
-                data = response.get('data', [])
-
-                if not data:
-                    break
-
-                all_data.extend(data)
-                offset += limit
-
-                print(f'Fetched {len(data)} items, total so far: {len(all_data)}')
-
-                response = pd.DataFrame(all_data)
-                print('All data fetched successfully')
-                return response
+            r = requests.get(url)
+            response = r.json()
+            response = pd.DataFrame(response['data'])
+            print('All data fetched successfully')
+            return response
            
         except Exception as e:
             print(f'Failed to fetch data: {e}')

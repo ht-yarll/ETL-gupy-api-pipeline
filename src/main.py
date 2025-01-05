@@ -80,8 +80,10 @@ WHERE country = ('Brasil')
 """
 new_table_name = 'gupy_data_analyzed'
 
-if not new_table_name in bq_client.list_tables(dataset_id):
-    print(f'Creating table {table_name} on {dataset_id}...')
+if not new_table_name in bqc.list_tables(dataset_id):
+    print(f'Creating table {new_table_name} on {dataset_id}...')
     bqc.query(query_job, destination_table=f'{project_id}.{dataset_id}.{new_table_name}')   
 else:
     print(f'Table {new_table_name} already exists on {dataset_id}')
+    ask = bqc.get_table(f'{project_id}.{dataset_id}.{new_table_name}')
+    bqc.query(query_job, destination_table=f'{project_id}.{dataset_id}.{ask.table_id}')

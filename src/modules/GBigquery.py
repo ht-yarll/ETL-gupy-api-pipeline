@@ -17,6 +17,7 @@ class GBigQuery:
         self.client = bigquery_client
 
     def up_to_bigquery(self, file, destination_table, if_exists='replace'):
+        
         job_config = bigquery.LoadJobConfig(source_format = bigquery.SourceFormat.PARQUET)
         if isinstance(file, pd.DataFrame):
             data = self.client.load_table_from_dataframe(
@@ -29,6 +30,12 @@ class GBigQuery:
                 )
         data.result()
         return data
+    def get_table(self, table_id):
+        return self.client.get_table(table_id)
+
+    def list_tables(self, data_set_id):
+        tables = self.client.list_tables(data_set_id)
+        return [t.table_id for t in tables]
     
     def query(self, query_string: str, destination_table: str = None):
         try:
