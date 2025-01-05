@@ -1,11 +1,8 @@
-import os
 import pathlib
 from api.gupy import gupy_fetch_data
 from modules.GBigquery import GBigQuery, get_bqclient
 from modules.GCStorage import GCStorage, get_gclient
 from modules.DataProcessor import DataProcessor
-
-import pandas as pd
 
 working_dir = pathlib.Path.cwd()
 files_folder = working_dir.joinpath('data/files_from_script')
