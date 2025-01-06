@@ -17,7 +17,7 @@ class GBigQuery:
         self.client = bigquery_client
 
     def up_to_bigquery(self, file, destination_table, if_exists='replace'):
-        
+
         job_config = bigquery.LoadJobConfig(source_format = bigquery.SourceFormat.PARQUET)
         if isinstance(file, pd.DataFrame):
             data = self.client.load_table_from_dataframe(
@@ -40,11 +40,12 @@ class GBigQuery:
     def query(self, query_string: str, destination_table: str = None):
         try:
             job_config = bigquery.QueryJobConfig()
-            
-            if destination_table:
-                job_config.destination = destination_table
-                job_config.write_disposition = 'WRITE_TRUNCATE'
 
+            if destination_table:
+                print(f'Setting destination table to: {destination_table}')
+                job_config.destination = destination_table
+                job_config.write_disposition = bigquery.WriteDisposition.WRITE_TRUNCATE
+                print('Write disposition set to WRITE_TRUNCATE')
 
             query_job = self.client.query(query_string, job_config = job_config)
             query_job.result()

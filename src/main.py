@@ -73,17 +73,40 @@ selected_columns = [
     if field.name not in excluded_columns
     ]
 
-query_job = f"""
+query_job_select = f"""
 SELECT {', '.join(selected_columns)}
 FROM   `blackstone-446301.user_data.gupy_data`
 WHERE country = ('Brasil')
 """
-new_table_name = 'gupy_data_analyzed'
+update_query = f"""UPDATE `blackstone-446301.user_data.gupy_data_to_analyze`
+SET type = CASE
+    WHEN type LIKE '%vacancy_type_effective%' THEN 'efetivo'
+    WHEN type LIKE '%vacancy_type_internship%' THEN 'estagio'
+    WHEN type LIKE '%vacancy_legal_entity%' THEN 'pj'
+    WHEN type LIKE '%vacancy_type_apprentice%' THEN 'aprendiz'
+    WHEN type LIKE '%vacancy_type_lecturer%' THEN 'professor'
+END
+WHERE country = ('Brasil')
+"""
+new_table_name = 'gupy_data_to_analyze'
 
 if not new_table_name in bqc.list_tables(dataset_id):
     print(f'Creating table {new_table_name} on {dataset_id}...')
-    bqc.query(query_job, destination_table=f'{project_id}.{dataset_id}.{new_table_name}')   
+    bqc.query(
+        query_job_select, 
+        destination_table=f'{project_id}.{dataset_id}.{new_table_name}'
+            ) 
+    bqc.query(
+        update_query, 
+            )     
 else:
     print(f'Table {new_table_name} already exists on {dataset_id}')
-    ask = bqc.get_table(f'{project_id}.{dataset_id}.{new_table_name}')
-    bqc.query(query_job, destination_table=f'{project_id}.{dataset_id}.{ask.table_id}')
+    get_table = bqc.get_table(f'{project_id}.{dataset_id}.{new_table_name}')
+    bqc.query(
+        query_job_select, 
+        destination_table=f'{project_id}.{dataset_id}.{get_table.table_id}'
+        )
+    bqc.query(
+        update_query, 
+            )   
+print('Process finished')
