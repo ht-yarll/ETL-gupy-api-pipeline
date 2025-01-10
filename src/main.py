@@ -3,6 +3,7 @@ from api.gupy import gupy_fetch_data
 from modules.GBigquery import GBigQuery, get_bqclient
 from modules.GCStorage import GCStorage, get_gclient
 from modules.DataProcessor import DataProcessor
+from google.cloud import bigquery
 
 working_dir = pathlib.Path.cwd()
 files_folder = working_dir.joinpath('data/files_from_script')
@@ -94,19 +95,15 @@ if not new_table_name in bqc.list_tables(dataset_id):
     print(f'Creating table {new_table_name} on {dataset_id}...')
     bqc.query(
         query_job_select, 
-        destination_table=f'{project_id}.{dataset_id}.{new_table_name}'
+        destination_table=f'{project_id}.{dataset_id}.{new_table_name}',
+        write_disposition = 'WRITE_TRUNCATE'
             ) 
-    bqc.query(
-        update_query, 
-            )     
 else:
     print(f'Table {new_table_name} already exists on {dataset_id}')
-    get_table = bqc.get_table(f'{project_id}.{dataset_id}.{new_table_name}')
     bqc.query(
         query_job_select, 
-        destination_table=f'{project_id}.{dataset_id}.{get_table.table_id}'
+        destination_table = f'{project_id}.{dataset_id}.{new_table_name}',
+        write_disposition = 'WRITE_TRUNCATE'
         )
-    bqc.query(
-        update_query, 
-            )   
+bqc.query(update_query)   
 print('Process finished')
