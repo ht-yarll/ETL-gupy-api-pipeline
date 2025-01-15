@@ -33,6 +33,16 @@ try:
 except Exception as e:
     print(e)
 
-#Streaming to BigQuery
+# #Streaming to BigQuery
 bq_client = get_bqclient()
 gbq = GBigQuery(bq_client)
+project_id = 'blackstone-446301'
+dataset_id = 'dgupy'
+
+data = {
+    'bucket_name': 'bstone-dgupy',
+    'file_name': 'gupy_data.parquet',
+    'time_created': '2025-01-15T05:18:37Z'
+}
+
+gbq.stream_to_bq(data, project_id = project_id, dataset_id = dataset_id)

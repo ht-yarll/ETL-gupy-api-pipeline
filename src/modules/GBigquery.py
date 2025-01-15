@@ -31,14 +31,7 @@ class GBigQuery:
                 )
         data.result()
         return data
-    
-    def get_table(self, table_id):
-        return self.client.get_table(table_id)
 
-    def list_tables(self, data_set_id):
-        tables = self.client.list_tables(data_set_id)
-        return [t.table_id for t in tables]
-    
     def query(self, query_string: str, 
               destination_table: str = None, 
               ):
@@ -60,3 +53,46 @@ class GBigQuery:
         
         except Exception as e:
             print(f'Error during query: {e}')
+
+    def stream_to_bq(self, data: dict, project_id: str, dataset_id: str):
+        bkt_name = data['bucket_name']
+        file_name = data['file_name']
+        time_created = data['time_created']
+        print(f'Processing file: {file_name} from bkt: {bkt_name}')
+
+        try:
+            table_name = file_name.split('.')[0]
+            print(f"Derived table name: {table_name}")
+
+            self.load_table_from_uri(
+                bucketname = bkt_name, 
+                filename = file_name,
+                project_id = project_id,
+                dataset_id = dataset_id, 
+                table_name = table_name
+                )
+
+        except Exception as e:
+            print(f'Error during query: {e}')
+
+    def load_table_from_uri(self, bucketname, filename, project_id, dataset_id, table_name):
+        uri = f"gs://{bucketname}/{filename}"
+        table_id = f"{project_id}.{dataset_id}.{table_name}"
+
+        job_config = bigquery.LoadJobConfig(
+            source_format = bigquery.SourceFormat.PARQUET,
+            write_disposition = 'WRITE_TRUNCATE'            
+            )
+
+        try:
+            load_job = self.client.load_table_from_uri(
+                uri,
+                table_id,
+                job_config = job_config
+                )
+            
+            load_job.result()
+            print(f"Table {table_id} loaded from {uri} with success")
+
+        except Exception as e:    
+            print(f'Error during loading data into BQ: {e}')

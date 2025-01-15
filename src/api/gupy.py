@@ -60,4 +60,4 @@ def gupy_fetch_data():
     df_jobs['experience'] = df_jobs['name'].apply(check_experience)
 
     df = processor.treat_data(df_jobs)
-    processor.save_to_parquet(df)
+    processor.save_to_parquet(df, file_name='gupy_data.parquet')
