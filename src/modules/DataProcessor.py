@@ -57,6 +57,7 @@ class DataProcessor:
                 col: "N/A" if df[col].dtype == "object" else 0
                 for col in df.columns
             })
+            df = df.drop_duplicates()
             df = df.convert_dtypes()
             
         except Exception as e:

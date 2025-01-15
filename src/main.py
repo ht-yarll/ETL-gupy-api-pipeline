@@ -33,7 +33,7 @@ try:
 except Exception as e:
     print(e)
 
-# #Streaming to BigQuery
+#Streaming to BigQuery
 bq_client = get_bqclient()
 gbq = GBigQuery(bq_client)
 project_id = 'blackstone-446301'
