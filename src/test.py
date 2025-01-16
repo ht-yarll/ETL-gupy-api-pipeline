@@ -1,7 +1,8 @@
-from modules.DataProcessor import DataProcessor
+from modules.DataProcessor import DataProcessor 
+from api.gupy import fetch_gupy_data
 
 processor = DataProcessor('data/files_from_script')
-df = processor.fetch_gupy_data('python')
+df = fetch_gupy_data('python')
 df = processor.treat_data(df)
 
 print(df.head())
