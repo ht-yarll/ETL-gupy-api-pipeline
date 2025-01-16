@@ -31,7 +31,6 @@ def main():
 
         for file_path in files_folder.glob('*.*'):
             gcs.upload_file(bucket_gcs, file_path.name, str(file_path))
-        
         print(f'upload of {file_path.name} to GCS was done!')
 
     except Exception as e:
@@ -51,5 +50,5 @@ def main():
 
     gbq.stream_to_bq(data, project_id = project_id, dataset_id = dataset_id)
 
-    if __name__ == 'main':
-        main()
+if __name__ == '__main__':
+    main()

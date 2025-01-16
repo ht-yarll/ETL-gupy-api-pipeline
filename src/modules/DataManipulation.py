@@ -1,9 +1,12 @@
+import pathlib
 from api.gupy import gupy_fetch_data
 from modules.DataProcessor import DataProcessor
 import pandas as pd
 
+working_dir = pathlib.Path.cwd()
+files_folder = working_dir.joinpath('data/files_from_script')
+processor = DataProcessor(files_folder)
 df_jobs = gupy_fetch_data()
-processor = DataProcessor()
 
 # Creating job_type column
 a_dados = ['dados']
