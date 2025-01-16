@@ -16,6 +16,8 @@ def gupy_fetch_data():
 
     df_jobs = pd.concat(all_jobs, ignore_index=True)
 
+    print(df_jobs.head())
+
     # Creating job_type column
     a_dados = ['dados']
     a_uxui = ['uxui', 'ux ui', 'ux/ui']

@@ -9,31 +9,27 @@ class DataProcessor:
         self.output_folder = output_path
 
     def fetch_gupy_data(self, label: str) -> pd.DataFrame:
-        url_template = f"https://portal.api.gupy.io/api/job?name={label}&offset=0&limit=400"
         offset = 0
         all_data = []
         print(f'Fetching data for {label}...')
 
         try:
             while True:
-                url = url_template.format(label=label, offset=offset)
+                url_template = (
+                    f"https://portal.api.gupy.io/api/job?name={label}&offset={offset}&limit=400"
+                    )
                 print(f'Fetching page {offset}...')
 
-                r = requests.get(url)
-                r.raise_for_status()
+                response = requests.get(url_template)
+                data = response.json()
+                
+                for i in data['data']:
+                    all_data.append(i)
 
-                response = r.json()
-                data = response.get('data', [])
-
-                if not data:
-                    print('there is no more data')    
+                if not data['data']:
                     break
 
-                all_data.extend(data)
-                offset += 400
-
-                if offset == 4000:
-                    break
+                offset += 10
             
             result = pd.DataFrame(all_data)
             print('All data fetched with success')
@@ -53,6 +49,9 @@ class DataProcessor:
                 .str.replace(r"[^a-z0-9_]", "_", regex=True)
 
             )
+            df = df.map(
+            lambda x: str(x) if isinstance(x, dict) else x
+        )
             df = df.fillna({
                 col: "N/A" if df[col].dtype == "object" else 0
                 for col in df.columns
