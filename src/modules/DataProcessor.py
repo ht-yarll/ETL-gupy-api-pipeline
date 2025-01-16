@@ -1,5 +1,3 @@
-import json
-
 import pandas as pd
 import requests
 
@@ -7,38 +5,7 @@ import requests
 class DataProcessor:
     def __init__(self, output_path: str) -> None:
         self.output_folder = output_path
-
-    def fetch_gupy_data(self, label: str) -> pd.DataFrame:
-        offset = 0
-        all_data = []
-        print(f'Fetching data for {label}...')
-
-        try:
-            while True:
-                url_template = (
-                    f"https://portal.api.gupy.io/api/job?name={label}&offset={offset}&limit=400"
-                    )
-                print(f'Fetching page {offset}...')
-
-                response = requests.get(url_template)
-                data = response.json()
-                
-                for i in data['data']:
-                    all_data.append(i)
-
-                if not data['data']:
-                    break
-
-                offset += 10
-            
-            result = pd.DataFrame(all_data)
-            print('All data fetched with success')
-            return result
-           
-        except Exception as e:
-            print(f'Failed to fetch data: {e}')
-            return pd.DataFrame()
-
+        
     def treat_data(self, df: pd.DataFrame) -> pd.DataFrame:
         try:
             print('Treating data...')
