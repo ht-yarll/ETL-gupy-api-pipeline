@@ -51,6 +51,67 @@ def check_experience(x):
     
 df_jobs['experience'] = df_jobs['name'].apply(check_experience)
 
+def check_state(state_name):
+    state_abbreviations = {
+        "acre": "AC",
+        "alagoas": "AL",
+        "amapá": "AP",
+        "amazonas": "AM",
+        "bahia": "BA",
+        "ceará": "CE",
+        "distrito federal": "DF",
+        "espírito santo": "ES",
+        "goiás": "GO",
+        "maranhão": "MA",
+        "mato grosso": "MT",
+        "mato grosso do sul": "MS",
+        "minas gerais": "MG",
+        "pará": "PA",
+        "paraíba": "PB",
+        "paraná": "PR",
+        "pernambuco": "PE",
+        "piauí": "PI",
+        "rio de janeiro": "RJ",
+        "rio grande do norte": "RN",
+        "rio grande do sul": "RS",
+        "rondônia": "RO",
+        "roraima": "RR",
+        "santa catarina": "SC",
+        "são paulo": "SP",
+        "sergipe": "SE",
+        "tocantins": "TO"
+    }
+
+    state_name_lower = state_name.lower()
+
+    for full_name, abbreviation in state_abbreviations.items():
+        if full_name in state_name_lower:
+            return abbreviation
+
+    return "STATE NOT RECOGNIZED"
+
+df_jobs.insert(
+    loc = 14,
+    columns = 'state_abbreviation',
+    value = df_jobs['state'].apply(check_state)
+)
+
+
+df_jobs['type'] = df_jobs['type'].replace(
+    {
+    'vacancy_type_effective': 'Efetivo',
+    'vacancy_type_internship': 'Estágio',
+    'vacancy_type_talent_pool': 'Banco de Talentos',
+    'vacancy_type_temporary': 'Temporário',
+    'vacancy_type_apprentice': 'Aprendiz',
+    'vacancy_type_freelancer': 'Freelancer',
+    'vacancy_legal_entity': 'PJ',
+    'vacancy_type_associate': 'Associado',
+    'vacancy_type_autonomous': 'Autonomo',
+    'vacancy_type_lecturer': 'Professor'
+    }
+)
+
 def data_treated() -> None:
     df = processor.treat_data(df_jobs)
     df_parquet = processor.save_to_parquet(df, file_name='gupy_data.parquet')
