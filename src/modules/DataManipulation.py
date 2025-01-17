@@ -91,8 +91,8 @@ def check_state(state_name):
     return "STATE NOT RECOGNIZED"
 
 df_jobs.insert(
-    loc = 14,
-    columns = 'state_abbreviation',
+    loc = 13,
+    column = 'state_abbreviation',
     value = df_jobs['state'].apply(check_state)
 )
 

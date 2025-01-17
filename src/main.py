@@ -11,8 +11,7 @@ files_folder = working_dir.joinpath('data/files_from_script')
 processor = DataProcessor(files_folder)
 
 def main():
-#Extracting data
-    gupy_fetch_data()
+#Extracting data on DataManipulation.py
 
 #Transforming data
     data_treated()

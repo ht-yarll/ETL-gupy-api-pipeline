@@ -40,8 +40,7 @@ def fetch_gupy_data(label: str) -> pd.DataFrame:
             return pd.DataFrame()
 
 def gupy_fetch_data():
-    # labels = ['dados', 'UX/UI', 'administração', 'rh', 'frontend']
-    labels = ['python']
+    labels = ['dados', 'UX/UI', 'administração', 'rh', 'frontend']
 
     all_jobs = []
     for l in labels:
