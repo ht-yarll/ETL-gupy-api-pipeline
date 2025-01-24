@@ -88,7 +88,7 @@ def check_state(state_name):
         if full_name in state_name_lower:
             return abbreviation
 
-    return "STATE NOT RECOGNIZED"
+    return "N/A"
 
 df_jobs.insert(
     loc = 13,
@@ -108,7 +108,8 @@ df_jobs['type'] = df_jobs['type'].replace(
     'vacancy_legal_entity': 'PJ',
     'vacancy_type_associate': 'Associado',
     'vacancy_type_autonomous': 'Autonomo',
-    'vacancy_type_lecturer': 'Professor'
+    'vacancy_type_lecturer': 'Professor',
+    'vacancy_type_outsource': 'Terceirização'
     }
 )
 
