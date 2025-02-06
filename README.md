@@ -46,7 +46,7 @@ Build and style the dashboard in Looker Studio, leveraging Figma for custom desi
 - [X]   Send to **CloudStorage**
 - [X]   Upload to **BigQuery**
 - [X]   Work with **LookerStudio** and **Figma** to **design a dashboard**
-- [ ]   Post **insights** and **final dashboard**
+- [X]   Post **insights** and **final dashboard**
 
 ## Key Takeaways
 
